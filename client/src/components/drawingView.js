@@ -1,15 +1,43 @@
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, TextInput } from 'react-native';
 import React, { useState, useEffect } from "react";
+import { SERVER_ADDRESS } from '../Constants';
 import CanvasDraw from "react-canvas-draw";
+import { useParams, useNavigate } from 'react-router-dom';
+
+import axios from "axios";
 
 export default function DrawingView() {
+  const params = useParams()
   const [canvas, setCanvas] = useState();
 
-  const sendDrawing = async (value) => {
+  const setCanvasGame = async (canvasDraw) => {
+    setCanvas(canvasDraw)
+    if (params.role === 'Guesser') {
+      load()
+    }else {
+      console.log('Common draw something!')
+    }
+  }
+
+  const submit = async (value) => {
     try {
-      console.log(canvas.getSaveData())
-      console.log('test')
+      if (params.role !== 'Guesser') {
+        var toSave = canvas.getSaveData()
+        await axios.post(SERVER_ADDRESS+'/game/saveDrawing', {
+          drawing: toSave
+        })
+      }
     } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const load = async () => {
+    try {
+      var response = await axios.get(SERVER_ADDRESS+'/game/loadDrawing')
+      console.log(response.data)
+      canvas.loadSaveData(response.data.drawing, false)
+    } catch(error) {
       console.log(error)
     }
   }
@@ -20,10 +48,12 @@ export default function DrawingView() {
         style={{
           boxShadow:
             "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)"
-        }} ref={canvasDraw => (setCanvas(canvasDraw))}
+        }} ref={canvasDraw => (setCanvasGame(canvasDraw))}
       />
-      <Button title='Finish' onPress={sendDrawing}></Button>
+      { params.role === 'Guesser' && <TextInput placeholder='test test test'></TextInput>}
+      <Button title='Submit' onPress={submit}></Button>
     </View>
   );
 }
 
+ 

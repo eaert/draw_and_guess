@@ -9,7 +9,7 @@ export default function ChoosingView() {
   const navigator = useNavigate()
   const [wordsObj, setWordsObj] = useState();
 
-  async function getPlayWords() {
+  const getPlayWords = async () => {
     try {
       var response = await axios.get(SERVER_ADDRESS+'/game/words')
       setWordsObj(response.data)
@@ -18,8 +18,8 @@ export default function ChoosingView() {
     }
   }
 
-  function wordChoosen() {
-    navigator('/draw')
+  const wordChoosen = async (word) => {
+    navigator('/draw/drawer')
   }
 
   useEffect(() => {
@@ -36,9 +36,9 @@ export default function ChoosingView() {
           <Text>Hard</Text>
         </View>
         { wordsObj && <View >
-          <Button title={wordsObj.easy} onPress={wordChoosen}></Button>
-          <Button title={wordsObj.medium} onPress={wordChoosen}></Button>
-          <Button title={wordsObj.hard} onPress={wordChoosen}></Button>
+          <Button title={wordsObj.easy} onPress={() => wordChoosen(wordsObj.easy)}></Button>
+          <Button title={wordsObj.medium} onPress={() => wordChoosen(wordsObj.medium)}></Button>
+          <Button title={wordsObj.hard} onPress={() => wordChoosen(wordsObj.hard)}></Button>
         </View>}
       </View>
       <Button title='Pick Words' onPress={getPlayWords}></Button>

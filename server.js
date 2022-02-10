@@ -1,8 +1,12 @@
 const express = require('express');
+var bodyParser = require('body-parser')
 const path = require("path");
-const app = express();
 const session = require("client-sessions");
 var cors = require("cors");
+
+const app = express();
+app.use(express.json()); // parse application/json
+app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 
 const corsConfig = {
   origin: true,

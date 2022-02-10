@@ -16,22 +16,25 @@ export default function WaitingView() {
     try {
       var response = await axios.get(SERVER_ADDRESS+'/user/findOppnent')
       if (response.data.ready) {
-        navigator('/choosing')
+        if (response.data.rule === 'Drawer') {
+          navigator('/choosing')
+        } else {
+          navigator('/waitingRoom')
+        }
+      } else {
+        if (timeLeft !== 30) {
+          setTimeLeft(timeLeft+1)
+        } else {
+          timeOver()
+        }
       }
     } catch (error) {
       console.log(error)
     }
-    if (timeLeft !== 30) {
-      setTimeLeft(timeLeft+1)
-    } else {
-      timeOver()
-    }
   }
 
 
-  const [timeLeft, setTimeLeft] = useState(0);
-
-  
+  const [timeLeft, setTimeLeft] = useState(0);  
 
   useEffect(() => {
     const timer = setTimeout(() => {

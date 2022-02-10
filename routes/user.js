@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var db = require('./db/db')
+
 router.post('/join', async (req, res, next) => {
     try {
         req.session.player = await db.addUser()

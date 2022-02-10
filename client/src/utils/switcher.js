@@ -4,6 +4,7 @@ import WelcomeView from "../components/welcomeView";
 import WaitingView from "../components/waitingView";
 import ChoosingView from "../components/choosingView";
 import DrawingView from "../components/drawingView";
+import WaitingDrawView from "../components/waitingDrawView";
 
 export default function Switcher(){
     return(
@@ -12,7 +13,8 @@ export default function Switcher(){
             <Route path={"/"} element={<WelcomeView />}/>
             <Route path={"/wait"} element={<WaitingView />}/>
             <Route path={"/choosing"} element={<ChoosingView />}/>
-            <Route path={"/draw"} element={<DrawingView />}/>
+            <Route path={"/draw/:role"} element={<DrawingView />}/>
+            <Route path={"/waitingRoom"} element={<WaitingDrawView />}/>
 
         </Routes>
     )
