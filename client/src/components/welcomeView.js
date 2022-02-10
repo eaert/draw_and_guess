@@ -1,14 +1,25 @@
-import { Text, View, Button } from 'react-native';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { SERVER_ADDRESS } from '../Constants';
+import { Text, View, Button } from 'react-native';
+import { useNavigate } from 'react-router-dom';
+
+import axios from "axios";
 
 export default function WelcomeView() {
+  const navigator = useNavigate()
+  const startGame = async () => {
+    try {
+      await axios.post(SERVER_ADDRESS+'/user/join', )
+      navigator('/wait')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <View>
       <Text>Welcome to Draw & Guess Game !</Text>
-      <Link to={"/wait"}>
-        <Button title='Start Game' accessibilityLabel='Press to Start a new Game' />
-      </Link>
+      <Button title='Start Game' accessibilityLabel='Press to Start a new Game' onPress={startGame}/>
     </View>
   );
 }
