@@ -14,6 +14,7 @@ export default function WaitingDrawView() {
             if (response.data) {
                 navigator('/draw/Guesser')
             } else {
+                console.log('Waiting..')
                 return
             }
         }catch(error) {

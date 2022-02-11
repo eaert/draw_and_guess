@@ -13,10 +13,19 @@ router.get('/words', async (req, res, next) => {
     }
 })
 
+router.post('/choosenWord', async (req, res, next) => {
+    try {
+        await db.saveChoosenWord(req.session.player.gameRoom, req.body.word)
+        res.status(200).send('Choosen Word been saved successfuly.')
+    } catch (error) {
+        next(error)
+    }
+})
+
 router.post('/saveDrawing', async (req, res, next) => {
     try {
         var drawing = req.body
-        db.saveDrawing(req.session.player.gameRoom, drawing)
+        await db.saveDrawing(req.session.player.gameRoom, drawing)
         res.status(200).send('Drawing been saved successfuly.')
     } catch (error) {
         next(error)
@@ -36,6 +45,15 @@ router.get('/isDrawingReady', async (req, res, next) => {
     try {
         var isReady = await db.isDrawing(req.session.player.gameRoom)
         res.status(200).send(isReady)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.post('/guessWord', async (req, res, next) => {
+    try {
+        var isRight = await db.checkGuess(req.session.player.gameRoom, req.body.guess)
+        res.status(200).send({isCurrect: isRight})
     } catch (error) {
         next(error)
     }

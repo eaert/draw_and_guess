@@ -19,7 +19,13 @@ export default function ChoosingView() {
   }
 
   const wordChoosen = async (word) => {
-    navigator('/draw/drawer')
+    try {
+      console.log(word)
+      await axios.post(SERVER_ADDRESS+'/game/choosenWord', {word})
+      navigator('/draw/drawer')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -36,9 +42,9 @@ export default function ChoosingView() {
           <Text>Hard</Text>
         </View>
         { wordsObj && <View >
-          <Button title={wordsObj.easy} onPress={() => wordChoosen(wordsObj.easy)}></Button>
-          <Button title={wordsObj.medium} onPress={() => wordChoosen(wordsObj.medium)}></Button>
-          <Button title={wordsObj.hard} onPress={() => wordChoosen(wordsObj.hard)}></Button>
+          <Button title={wordsObj.easy} onPress={() => wordChoosen({easy: wordsObj.easy})}></Button>
+          <Button title={wordsObj.medium} onPress={() => wordChoosen({medium: wordsObj.medium})}></Button>
+          <Button title={wordsObj.hard} onPress={() => wordChoosen({hard: wordsObj.hard})}></Button>
         </View>}
       </View>
       <Button title='Pick Words' onPress={getPlayWords}></Button>

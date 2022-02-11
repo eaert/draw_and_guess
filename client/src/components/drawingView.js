@@ -9,6 +9,7 @@ import axios from "axios";
 export default function DrawingView() {
   const params = useParams()
   const [canvas, setCanvas] = useState();
+  const [guess, setGuess] = useState();
 
   const setCanvasGame = async (canvasDraw) => {
     setCanvas(canvasDraw)
@@ -19,13 +20,21 @@ export default function DrawingView() {
     }
   }
 
-  const submit = async (value) => {
+  const submit = async () => {
     try {
       if (params.role !== 'Guesser') {
         var toSave = canvas.getSaveData()
         await axios.post(SERVER_ADDRESS+'/game/saveDrawing', {
           drawing: toSave
         })
+      } else {
+        var toGuess = guess.value
+        var response = await axios.post(SERVER_ADDRESS+'/game/guessWord', {
+          guess: toGuess
+        })
+        if (response.data.isCurrect) {
+          
+        }
       }
     } catch (error) {
       console.log(error)
@@ -50,7 +59,7 @@ export default function DrawingView() {
             "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)"
         }} ref={canvasDraw => (setCanvasGame(canvasDraw))}
       />
-      { params.role === 'Guesser' && <TextInput placeholder='test test test'></TextInput>}
+      { params.role === 'Guesser' && <TextInput placeholder='test test test' ref={input => (setGuess(input))}></TextInput>}
       <Button title='Submit' onPress={submit}></Button>
     </View>
   );
