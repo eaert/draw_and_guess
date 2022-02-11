@@ -1,4 +1,4 @@
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, StyleSheet } from 'react-native';
 import { SERVER_ADDRESS } from '../Constants';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -33,21 +33,68 @@ export default function ChoosingView() {
   }, []);
 
   return (
-    <View>
-      <Text>Please choose a word according to its difficulty level</Text>
-      <View>
+    <View style={styles.waitingView}>
+      <Text style={styles.titleText}>Please choose a word according to its difficulty level</Text>
+      { wordsObj && <View style={styles.waitingButtonsView}>
         <View>
-          <Text>Easy</Text>
-          <Text>Medium</Text>
-          <Text>Hard</Text>
+          <Text style={styles.waitingText}>Easy</Text>
+          <Button title={wordsObj.easy} onPress={() => wordChoosen({easy: wordsObj.easy})} color='#696969'></Button>
         </View>
-        { wordsObj && <View >
-          <Button title={wordsObj.easy} onPress={() => wordChoosen({easy: wordsObj.easy})}></Button>
-          <Button title={wordsObj.medium} onPress={() => wordChoosen({medium: wordsObj.medium})}></Button>
-          <Button title={wordsObj.hard} onPress={() => wordChoosen({hard: wordsObj.hard})}></Button>
-        </View>}
+        <View>
+          <Text style={styles.waitingText}>Medium</Text>
+          <Button title={wordsObj.medium} onPress={() => wordChoosen({medium: wordsObj.medium})} color='#696969'></Button>
+        </View>
+        <View>
+          <Text style={styles.waitingText}>Hard</Text>
+          <Button title={wordsObj.hard} onPress={() => wordChoosen({hard: wordsObj.hard})} color='#696969'></Button>
+        </View>
+      </View>}
+      <View style={{paddingTop: '10px'}}>
+        <Button title='Pick Words' onPress={getPlayWords} color='#282828'></Button>
       </View>
-      <Button title='Pick Words' onPress={getPlayWords}></Button>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  titleText: {
+    fontFamily: "Cochin",
+    fontSize: 30,
+    fontWeight: "bold",
+    paddingTop: '75px'
+  },
+  waitingView: {
+    alignItems: 'center',
+  },
+  waitingButtonsView: {
+    paddingTop: '10px',
+    alignItems: 'center',
+    width: '100px'
+  },
+  waitingText: {
+    fontFamily: "Cochin",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  chooseButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
+    width: '5px'
+  },
+  changeButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
+    textDecorationColor: 'black',
+    width: '5px'
+  }
+});

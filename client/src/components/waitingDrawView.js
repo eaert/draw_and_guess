@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { SERVER_ADDRESS } from '../Constants';
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from 'react-router-dom';
-
+import { ThreeDots } from  'react-loader-spinner'
 import axios from "axios";
+
 
 export default function WaitingDrawView() {
     const navigator = useNavigate()
@@ -12,6 +13,7 @@ export default function WaitingDrawView() {
         try {
             var response = await axios.get(SERVER_ADDRESS+'/game/isDrawingReady')
             if (response.data) {
+                clearInterval(myInterval);
                 navigator('/draw/Guesser')
             } else {
                 console.log('Waiting..')
@@ -22,17 +24,27 @@ export default function WaitingDrawView() {
         }
     }
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            isDrawingReady();
-        }, 5000);
-      
-        return () => clearTimeout(timer);
-    });
+    var myInterval = setInterval(() => {
+        isDrawingReady()
+    }, 5000);
 
     return (
-        <View>
-            <Text>Waiting for opponnent Drawings</Text>
+        <View style={styles.waitingView}>
+            <Text style={styles.waitingText}>Waiting for opponnent Drawings</Text>
+            <ThreeDots color="#696969" height="100" width="100" />
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    waitingView: {
+      paddingTop: '10px',
+      alignItems: 'center'
+    },
+    waitingText: {
+      fontFamily: "Cochin",
+      fontSize: 30,
+      fontWeight: "bold",
+      paddingTop: '75px'
+    }
+  });

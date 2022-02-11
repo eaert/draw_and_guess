@@ -26,6 +26,7 @@ router.post('/saveDrawing', async (req, res, next) => {
     try {
         var drawing = req.body
         await db.saveDrawing(req.session.player.gameRoom, drawing)
+        req.session.player.rule = 'Guesser'
         res.status(200).send('Drawing been saved successfuly.')
     } catch (error) {
         next(error)
@@ -53,9 +54,20 @@ router.get('/isDrawingReady', async (req, res, next) => {
 router.post('/guessWord', async (req, res, next) => {
     try {
         var isRight = await db.checkGuess(req.session.player.gameRoom, req.body.guess)
+        if (isRight) {
+            req.session.player.rule = 'Drawer'
+        }
         res.status(200).send({isCurrect: isRight})
     } catch (error) {
         next(error)
+    }
+})
+
+router.get('/leaderboard', async (req, res, next) => {
+    try {
+
+    } catch (error) {
+        
     }
 })
 

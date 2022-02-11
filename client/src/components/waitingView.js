@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { SERVER_ADDRESS } from '../Constants';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -45,8 +45,21 @@ export default function WaitingView() {
   });
 
   return (
-    <View>
-      <Text>{30 - timeLeft} Seconds Left To find an opponent</Text>
+    <View style={styles.waitingView}>
+      <Text style={styles.waitingText}>{30 - timeLeft} Seconds Left To find an opponent</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  waitingView: {
+    paddingTop: '10px',
+    alignItems: 'center'
+  },
+  waitingText: {
+    fontFamily: "Cochin",
+    fontSize: 30,
+    fontWeight: "bold",
+    paddingTop: '75px'
+  }
+});

@@ -1,10 +1,10 @@
 const gameRooms = {
-    1: {drawer: false, guesser: false, word: null, drawing: null, startTime: null, endTime: null, points: 0}
+    1: {drawer: false, guesser: false, word: [], drawing: [], isDrawing: false, startTime: null, endTime: null, points: 0}
 }
 
 const leaderScore = {
     time: {word: null, time: Infinity},
-    score: {roomNumber: null, score: 0}
+    score: {roomNumber: null, score: 0, time: null}
 }
 
 const scoreCalculate = {
@@ -14,6 +14,10 @@ const scoreCalculate = {
 }
 
 var roomNumber = 1
+
+function lastValue(lst) {
+    return lst[lst.length -1]
+}
 
 function checkLeaderScore(roomNumber) {
     var newTime = gameRooms[roomNumber].endTime - gameRooms[roomNumber].startTime
@@ -25,6 +29,7 @@ function checkLeaderScore(roomNumber) {
     if (newScore > leaderScore.score.score) {
         leaderScore.score.roomNumber = roomNumber
         leaderScore.score.score = newScore
+        leaderScore.score.time = new Date()
     }
 }
 
@@ -52,25 +57,27 @@ async function checkRoomReady(roomNumber) {
 
 async function saveChoosenWord(roomNumber, word) {
     if (gameRooms[roomNumber]) {
-        gameRooms[roomNumber].word = word
+        gameRooms[roomNumber].word.push(word)
     }
 }
 
 async function saveDrawing(roomNumber, drawing) {
     if (gameRooms[roomNumber]) {
-        gameRooms[roomNumber].drawing = drawing
+        gameRooms[roomNumber].drawing.push(drawing)
         gameRooms[roomNumber].startTime = new Date()
+        gameRooms[roomNumber].isDrawing = true
     }
 }
 
 async function getDrawing(roomNumber) {
     if (gameRooms[roomNumber]) {
-        return gameRooms[roomNumber].drawing
+        gameRooms[roomNumber].isDrawing = false
+        return lastValue(gameRooms[roomNumber].drawing)
     }
 }
 
 async function isDrawing(roomNumber) {
-    if (gameRooms[roomNumber] && gameRooms[roomNumber].drawing) {
+    if (gameRooms[roomNumber] && gameRooms[roomNumber].isDrawing) {
         return true
     }
     return false
@@ -78,9 +85,9 @@ async function isDrawing(roomNumber) {
 
 async function checkGuess(roomNumber, word) {
     if (gameRooms[roomNumber]) {
-        if (Object.values(gameRooms[roomNumber].word)[0] === word) {
+        if (Object.values(lastValue(gameRooms[roomNumber].word))[0] === word) {
             gameRooms[roomNumber].endTime = new Date()
-            gameRooms[roomNumber].points += scoreCalculate[Object.keys(gameRooms[roomNumber].word)[0]] 
+            gameRooms[roomNumber].points += scoreCalculate[Object.keys(lastValue(gameRooms[roomNumber].word))[0]] 
             checkLeaderScore(roomNumber)
             return true
         }
