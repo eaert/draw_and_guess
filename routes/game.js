@@ -65,9 +65,10 @@ router.post('/guessWord', async (req, res, next) => {
 
 router.get('/leaderboard', async (req, res, next) => {
     try {
-
+        var gameLeaderboard = await db.getLeaderboard()
+        res.status(200).send({leaderboard: gameLeaderboard})
     } catch (error) {
-        
+        next(error)
     }
 })
 

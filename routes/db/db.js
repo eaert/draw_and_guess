@@ -1,16 +1,18 @@
+const moment = require("moment")
+
 const gameRooms = {
     1: {drawer: false, guesser: false, word: [], drawing: [], isDrawing: false, startTime: null, endTime: null, points: 0}
 }
 
 const leaderScore = {
-    time: {word: null, time: Infinity},
-    score: {roomNumber: null, score: 0, time: null}
+    time: {word: null, time: null, timestamp: Infinity},
+    score: {roomNumber: null, score: -Infinity, time: null}
 }
 
 const scoreCalculate = {
     'easy': 1,
-    'medium': 2,
-    'hard': 3
+    'medium': 3,
+    'hard': 5
 }
 
 var roomNumber = 1
@@ -21,23 +23,34 @@ function lastValue(lst) {
 
 function checkLeaderScore(roomNumber) {
     var newTime = gameRooms[roomNumber].endTime - gameRooms[roomNumber].startTime
-    if (newTime < leaderScore.time.time) {
-        leaderScore.time.word = Object.values(gameRooms[roomNumber].word)[0]
-        leaderScore.time.time = newTime
+    if (newTime < leaderScore.time.timestamp) {
+        leaderScore.time.word = Object.values(lastValue(gameRooms[roomNumber].word))[0]
+        leaderScore.time.timestamp = newTime
+        leaderScore.time.time = moment(newTime).format('mm:ss')
     }
     var newScore = gameRooms[roomNumber].points
     if (newScore > leaderScore.score.score) {
         leaderScore.score.roomNumber = roomNumber
         leaderScore.score.score = newScore
-        leaderScore.score.time = new Date()
+        leaderScore.score.time = moment().format('MMM Do YYYY, HH:MM:SS')
     }
 }
 
-async function addUser() {
-    if (gameRooms[roomNumber].drawer && gameRooms[roomNumber].guesser) {
+async function addUser(currentRoom) {
+    if ((gameRooms[roomNumber].drawer && gameRooms[roomNumber].guesser)) {
         roomNumber+=1
-        gameRooms[roomNumber] = {drawer: false, guesser: false, word: null, drawing: null, startTime: null, endTime: null, points: 0}
-        return addUser()
+        if (!gameRooms[roomNumber]) {
+            gameRooms[roomNumber] = {drawer: false, guesser: false, word: [], drawing: [], isDrawing: false, startTime: null, endTime: null, points: 0}
+        }
+        return await addUser()
+    } else if (currentRoom == roomNumber) {
+        roomNumber += 1
+        if (!gameRooms[roomNumber]) {
+            gameRooms[roomNumber] = {drawer: false, guesser: false, word: [], drawing: [], isDrawing: false, startTime: null, endTime: null, points: 0}
+        }
+        var newRoom = await addUser()
+        roomNumber -= 1
+        return newRoom
     } else if (gameRooms[roomNumber].drawer) {
         gameRooms[roomNumber].guesser = true
         return {gameRoom: roomNumber, rule: 'Guesser'}
@@ -64,7 +77,7 @@ async function saveChoosenWord(roomNumber, word) {
 async function saveDrawing(roomNumber, drawing) {
     if (gameRooms[roomNumber]) {
         gameRooms[roomNumber].drawing.push(drawing)
-        gameRooms[roomNumber].startTime = new Date()
+        gameRooms[roomNumber].startTime = moment()
         gameRooms[roomNumber].isDrawing = true
     }
 }
@@ -86,13 +99,17 @@ async function isDrawing(roomNumber) {
 async function checkGuess(roomNumber, word) {
     if (gameRooms[roomNumber]) {
         if (Object.values(lastValue(gameRooms[roomNumber].word))[0] === word) {
-            gameRooms[roomNumber].endTime = new Date()
+            gameRooms[roomNumber].endTime = moment()
             gameRooms[roomNumber].points += scoreCalculate[Object.keys(lastValue(gameRooms[roomNumber].word))[0]] 
             checkLeaderScore(roomNumber)
             return true
         }
         return false
     }
+}
+
+async function getLeaderboard() {
+    return leaderScore
 }
 
 exports.addUser = addUser
@@ -102,3 +119,4 @@ exports.saveDrawing = saveDrawing
 exports.getDrawing = getDrawing
 exports.isDrawing = isDrawing
 exports.checkGuess = checkGuess
+exports.getLeaderboard = getLeaderboard

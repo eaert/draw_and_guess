@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { SERVER_ADDRESS } from '../Constants';
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { ThreeDots } from  'react-loader-spinner'
 import axios from "axios";
@@ -13,7 +13,7 @@ export default function WaitingDrawView() {
         try {
             var response = await axios.get(SERVER_ADDRESS+'/game/isDrawingReady')
             if (response.data) {
-                clearInterval(myInterval);
+                clearInterval(myInterval)
                 navigator('/draw/Guesser')
             } else {
                 console.log('Waiting..')
@@ -27,6 +27,17 @@ export default function WaitingDrawView() {
     var myInterval = setInterval(() => {
         isDrawingReady()
     }, 5000);
+
+    const unloadHandle = async () => {
+        if (myInterval) {
+            clearInterval(myInterval)
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('unload', unloadHandle)
+        return () => window.removeEventListener('unload', unloadHandle)
+    })
 
     return (
         <View style={styles.waitingView}>

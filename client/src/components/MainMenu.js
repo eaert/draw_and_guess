@@ -13,7 +13,7 @@ export default function MainMenu() {
         <FontAwesomeIcon icon={faHome}></FontAwesomeIcon>
         <span>Home</span>
       </Link>
-      <Link id="Leaderboard" className="menuLink" to="/Leaderboard" style={styles.menuLink}>
+      <Link id="Leaderboard" className="menuLink" to="/leaderboard" style={styles.menuLink}>
         <FontAwesomeIcon icon={faTrophy}></FontAwesomeIcon>
         <span>Leaderboard</span>
       </Link>

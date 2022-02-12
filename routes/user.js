@@ -4,7 +4,13 @@ var db = require('./db/db')
 
 router.post('/join', async (req, res, next) => {
     try {
-        req.session.player = await db.addUser()
+        var currentRoom
+        if (req.session.player) {
+            currentRoom = req.session.player.gameRoom
+        } else {
+            currentRoom = 0
+        }
+        req.session.player = await db.addUser(currentRoom)
         console.log(req.session.player)
         res.status(200).send('Join successfuly.')
     } catch (error) {

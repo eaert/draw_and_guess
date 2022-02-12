@@ -27,6 +27,10 @@ export default function DrawingView() {
     canvas.undo()
   }
 
+  const giveup = async () => {
+    navigator('/choosing')
+  }
+
   const submit = async () => {
     try {
       if (params.role !== 'Guesser') {
@@ -44,6 +48,8 @@ export default function DrawingView() {
         })
         if (response.data.isCurrect) {
           navigator('/choosing')
+        } else {
+          window.alert('Wrong Guess, try agian.')
         }
       }
     } catch (error) {
@@ -68,11 +74,14 @@ export default function DrawingView() {
             "0 13px 27px -5px rgba(50, 50, 93, 0.25),    0 8px 16px -8px rgba(0, 0, 0, 0.3)"
         }} ref={canvasDraw => (setCanvasGame(canvasDraw))}
       /> : <ThreeDots color="#696969" height="100" width="100" />}
-      { params.role === 'Guesser' && <TextInput placeholder='test test test' ref={input => (setGuess(input))}></TextInput>}
-      <View style={styles.drawingButtonsView}>
+      { params.role === 'Guesser' && !sent && <View style={styles.guessView}>
+          <TextInput placeholder='Type your guess here' ref={input => (setGuess(input))} style={styles.guessInput}></TextInput>
+        </View>}
+      {!sent && <View style={styles.drawingButtonsView}>
         <Button title='Undo' onPress={undoLast} color='#696969'></Button>
+        {params.role === 'Guesser' && <Button title='Giveup' onPress={giveup} color='#696969'></Button>}
         <Button title='Submit' onPress={submit} color='#696969'></Button>
-      </View>
+      </View>}
     </View>
   );
 }
@@ -91,8 +100,19 @@ const styles = StyleSheet.create({
     paddingTop: '10px',
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100px'
   },
+  guessView: {
+    marginTop: '5px',
+    borderRadius: 5,
+    shadowRadius: 5,
+  },
+  guessInput: {
+    backgroundColor: 'lightgrey',
+    borderRadius: 5,
+    shadowRadius: 5,
+    textAlign: 'center',
+    fontWeight:'bold'
+  }
 });
 
  
