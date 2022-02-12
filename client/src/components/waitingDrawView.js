@@ -41,7 +41,7 @@ export default function WaitingDrawView() {
 
     return (
         <View style={styles.waitingView}>
-            <Text style={styles.waitingText}>Waiting for opponnent Drawings</Text>
+            <Text style={styles.waitingText}>Waiting for opponent Drawings</Text>
             <ThreeDots color="#696969" height="100" width="100" />
         </View>
     )
