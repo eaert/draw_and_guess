@@ -65,7 +65,7 @@ export default function LeaderboardView() {
 
 const styles = StyleSheet.create({
     titleView: {
-      width: '40%',
+      width: '50%',
       height: '70px',
       backgroundColor: 'rgba(0, 168, 232, 0.6)',
       marginTop: '10px', 
