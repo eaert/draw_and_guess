@@ -1,11 +1,17 @@
 ﻿## Draw & Guess Game
+ This repository is a basic Draw & Guess game.
+ 
+ # Demo
+ https://eaertdrawguess.herokuapp.com/
+ 
 # Installation
 Run Commands:
 * npm install
 * cd client & npm install
 * cd .. & npm start
 
-Server will run at address http://localhost:5000
+Inorder to run the game on custom address change SERVER_ADDRESS value at Constants.js.
+to run localy change the address to "http://localhost:5000"
 
 # Game Instruction
 * Click STAR GAME to start.
@@ -17,5 +23,3 @@ Server will run at address http://localhost:5000
 * Guesser will receive the Drawing and will try to guess the word.
 * Guesser will end his turn if he succeed or giveup.
 * Roles will be switch and the game will keep going on until one of the player leaves.
-
-Inorder to run the game on custom address change SERVER_ADDRESS value at Constants.js.
